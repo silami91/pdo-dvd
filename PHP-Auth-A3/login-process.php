@@ -1,40 +1,42 @@
-//use a class called auth and method called attempt
-//start with pdo
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Carbon\Carbon;
+use ITP\Auth\Auth;
 
 $session = new Session();
 $session->start();
-
 $request = Request::createFromGlobals();
-$auth = new ITP\Auth();
+
+$auth = new Auth();
+
 $userName = $request->request->get('username');
-$email = $request->request->get('email');
-if($session->get('email') != null)
+$password = $request->request->get('password');
+
+if($session->get('password') != null)
 {
     $response = new RedirectResponse('dashboard.php');
     return $response->send();
 }
 
-if($auth->attempt($userName, $email) == 1)
+if($auth->attempt($userName, $password) == true)
 {
-    $session->set('email',$userName);
-    $session->set('username', $email);
-    $session->set('loginTime', time());
+    $session->set('userName',$userName);
+    $session->set('password', $password);
+    $session->set('loginTime', Carbon::now());
     $session->getFlashBag()->set('successfulLogin', 'You have successfully logged in.');
     $response = new RedirectResponse('dashboard.php');
-    return $response->send();
-    //login
+    $response->send();
+    /*login*/
 }
 else
 {
     $session->getFlashBag()->set('errorLogin', 'Error logging in. Please check your username and password.');
     $response = new RedirectResponse('login.php');
-    return $response->send();
-    //flash message"Cant login"
+    $response->send();
+    /*flash message Cant login*/
 }
 

@@ -1,11 +1,14 @@
 {
-  "require": {
-    "symfony/http-foundation": "2.5.*@dev",
-    "nesbot/carbon": "1.8.*"
-  },
-  "autoload": {
-    "psr-0": {
-      "ITP": "./"
+    "require":
+    {
+        "symfony/http-foundation": "2.4.*@dev",
+        "nesbot/carbon": "1.8.*"
+    },
+    "autoload":
+    {
+        "classmap":
+        [
+           "ITP"
+        ]
     }
-  }
 }

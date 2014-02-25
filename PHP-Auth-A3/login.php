@@ -8,24 +8,29 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use \Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
+
+
 $session = new Session();
 $session->start();
 
-if($session->email != null)
+if($session->get('password') != null)
 {
     $response = new RedirectResponse('dashboard.php');
-    return $response->send();
+    $response->send();
 }
 ?>
 <form name="login" action='login-process.php' method="post">
-	Username: <input type="text" name="username"> 
+	Username: <input type="text" name="username">
+    <br>
 	Password: <input type="password" name="password">
-	<input type="submit" value="Submit"> //submit ot login process
-    <?php foreach ($view['session']->getFlash('notice') as $message): ?>
-        <div class="flash-notice">
-            <?php echo "<div class='flash-error'>$message</div>" ?>
-        </div>
-    <?php endforeach; ?>
+    <br>
+	<input type="submit" value="Submit">
+    <br>
+    <?php foreach($session->getFlashbag()->get('errorLogin') as $message):
+          echo $message;
+          endforeach ?>
 </form>
 </body>
 </html>
